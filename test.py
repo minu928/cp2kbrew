@@ -10,11 +10,12 @@ if __name__ == "__main__":
         file_name = filedict["log"]
         print(f"=" * 48)
         try:
-            opener = cb.Opener(logfile=filedict["log"], trjfile=filedict["trj"])
-            opener.nextframe()
-            print(f" SUCCESS -> {file_name}")
-            for key, val in opener.data.items():
+            cp2kbrewer = cb.CP2kBrewer(logfile=filedict["log"], trjfile=filedict["trj"])
+            data = cp2kbrewer.gathered_data
+            print(f"SUCCESS -> {file_name}")
+            for key, val in data.items():
                 print(f"\t{key:<8s}: {val.shape}")
+
         except:
-            print(f" FAILED  -> {file_name}")
+            print(f"FAILED  -> {file_name}")
     print(f"=" * 48)

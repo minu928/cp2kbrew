@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from cp2kbrew._base.dataclasses._interface import DataClass
+from ._interface import DataClass
 
 
 class Atom(DataClass):

@@ -1,12 +1,12 @@
 import re
 from typing import List
-from cp2kbrew._base.dataclasses import *
+from .dataclasses import *
 
 
-class Opener:
+class LogOpener:
     _end_patterns = ["\s+Extrapolation method:\s+ASPC\s+", "\s+\-\s+DBCSR STATISTICS\s+\-\s+"]
 
-    def __init__(self, logfile: str, trjfile: str) -> None:
+    def __init__(self, logfile: str) -> None:
         self._frame = -1
         self.logdata_generator = self._generate_data_from_logfile(logfile=logfile)
         self.nextframe()
