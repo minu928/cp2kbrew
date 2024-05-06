@@ -4,7 +4,7 @@ from .logfile import LogOpener
 from .trjfile import trjopener
 
 
-class CP2KBrewer(object):
+class CP2kBrewer(object):
     def __init__(self, logfile: str, trjfile: str, *, trjformat: str = "auto") -> None:
         self.log_opener = LogOpener(logfile=logfile)
         self.trjformat = self._check_trjformat(trjfile=trjfile, trjformat=trjformat)

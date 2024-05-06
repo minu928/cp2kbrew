@@ -10,7 +10,7 @@ if __name__ == "__main__":
         file_name = filedict["log"]
         print(f"=" * 48)
         try:
-            cp2kbrewer = cb.CP2kBrewer(logfile=filedict["log"], trjfile=filedict["trj"])
+            cp2kbrewer = cb.CP2KBrewer(logfile=filedict["log"], trjfile=filedict["trj"])
             data = cp2kbrewer.gathered_data
             print(f"SUCCESS -> {file_name}")
             for key, val in data.items():
