@@ -1,18 +1,9 @@
 import numpy as np
 from tqdm import tqdm
 from copy import deepcopy
-from .logfile import LogOpener
+from .logfile import LogOpener, default_units
 from .trjfile import trjopener
 from cp2kbrew.unit import UnitConvert
-
-
-default_units = {
-    "cell": "angstrom",
-    "energy": "eV",
-    "force": "hatree/bohr",
-    "stress": "GPa",
-    "atom": "none",
-}
 
 
 class CP2KBrewer(object):

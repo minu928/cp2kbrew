@@ -1,11 +1,5 @@
-from scipy import constants
 from ._interface import UnitConvertInterface
-
-
-length_dict = {"angstrom": 1.0, "nm": 10.0, "bohr": constants.value("atomic unit of length") * 1e10, "m": 1e10}
-energy_dict = {"J": 1.0, "eV": constants.eV, "hatree": constants.value("atomic unit of energy")}
-header_dict = {"G": "1e9*", "M": "1e6*"}
-special_dict = {"Pa": "J/m^3", "N": "J/m"}
+from ._support import support_items
 
 
 class UnitConvert(UnitConvertInterface):
@@ -29,7 +23,7 @@ class UnitConvert(UnitConvertInterface):
 
     def inspect(self, what, sep: str):
         what = self._encode_specialcase(what=what)
-        replace_dict_list = [length_dict, energy_dict, header_dict]
+        replace_dict_list = [val for key, val in support_items.items() if key != "special"]
         for replace_dict in replace_dict_list:
             for key, val in replace_dict.items():
                 what = what.replace(key, str(f"{val}"))
@@ -38,6 +32,6 @@ class UnitConvert(UnitConvertInterface):
         return what
 
     def _encode_specialcase(self, what: str):
-        for key, val in special_dict.items():
+        for key, val in support_items["special"].items():
             what = what.replace(key, val)
         return what

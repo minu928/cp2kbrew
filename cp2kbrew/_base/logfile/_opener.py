@@ -1,6 +1,17 @@
 import re
 from typing import List
+from copy import deepcopy
 from .dataclasses import *
+
+
+default_units = {
+    "cell": "angstrom",
+    "energy": "hatree",
+    "force": "hatree/bohr",
+    "stress": "GPa",
+    "atom": "none",
+    "coord": "angstrom",
+}
 
 
 class LogOpener:
@@ -9,6 +20,7 @@ class LogOpener:
     def __init__(self, logfile: str) -> None:
         self._frame = -1
         self.logdata_generator = self._generate_data_from_logfile(logfile=logfile)
+        self.unit = deepcopy(default_units)
         self.nextframe()
 
     @property
@@ -38,7 +50,14 @@ class LogOpener:
                     dataclass.decode_line(line=this_line)
 
     def reset_dataclasses(self) -> dict[str, DataClass]:
-        self.dataclasses = {"cell": Cell(), "energy": Energy(), "atom": Atom(), "force": Force(), "stress": Stress()}
+        self.dataclasses = {
+            "cell": Cell(),
+            "energy": Energy(),
+            "atom": Atom(),
+            "force": Force(),
+            "stress": Stress(),
+            "coord": Coord(),
+        }
 
     def nextframe(self):
         self.dataclasses = next(self.logdata_generator)

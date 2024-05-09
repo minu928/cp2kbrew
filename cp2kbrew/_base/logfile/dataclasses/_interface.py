@@ -5,7 +5,6 @@ from abc import abstractmethod, ABCMeta
 
 
 class DataClass(metaclass=ABCMeta):
-    _test_line: str = "none"
     is_request_control: bool = False
     _fmt = None
     _slice = None
