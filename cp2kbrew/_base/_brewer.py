@@ -7,16 +7,27 @@ from .logfile import LogOpener, default_units
 
 
 class CP2KBrewer(object):
-    def __init__(self, logfile: str, trjfile: str, *, fmt: str = "auto", is_gather_run: bool = True) -> None:
+    def __init__(
+        self,
+        logfile: str,
+        trjfile: str = None,
+        *,
+        fmt: str = "auto",
+        is_gather_run: bool = True,
+        total: int = None,
+        verbose: bool = True,
+    ) -> None:
         self._is_data_updated = False
         self._is_gathered_data = False
         self._multiplicity = {key: 1.0 for key in default_units.keys()}
         self.units = deepcopy(default_units)
         self.log_opener = LogOpener(logfile=logfile)
-        self.trj_opener = trjopener[self._check_fmt(file=trjfile, fmt=fmt)](trjfile=trjfile)
+        self.is_trjfile_None = trjfile is None
+        if not self.is_trjfile_None:
+            self.trj_opener = trjopener[self._check_fmt(file=trjfile, fmt=fmt)](trjfile=trjfile)
         self.reset_data()
         if is_gather_run:
-            self.gather()
+            self.gather(total=total, verbose=verbose)
 
     def __repr__(self) -> str:
         return self.__class__.__name__
@@ -28,6 +39,14 @@ class CP2KBrewer(object):
     @property
     def natoms(self) -> int:
         return int(len(self.log_opener.data["atom"]))
+
+    @property
+    def virial(self):
+        if not hasattr(self, "_virial"):
+            assert hasattr(self, "stress"), ArithmeticError("Theres is no stress in log")
+            self.units["stress"] = f"({self.units['stress']}*{self.units['cell']}^3)"
+            self._virial = self.stress * np.prod(self.cell, axis=-1)
+        return self._virial
 
     def reset_data(self):
         self._update_data()
@@ -46,7 +65,6 @@ class CP2KBrewer(object):
             try:
                 self._nextframe()
                 self._update_data()
-                self._assert_errors()
                 for key, val in self._current_data.items():
                     _data[key].append(val.copy())
                 if verbose:
@@ -83,7 +101,9 @@ class CP2KBrewer(object):
 
     def _update_data(self):
         self._current_data = self.log_opener.data
-        self._current_data["coords"] = self.trj_opener.coords
+        if not self.is_trjfile_None:
+            self._current_data["coords"] = self.trj_opener.coords
+            self._assert_errors()
 
     def _nextframe(self):
         self.log_opener.nextframe()
