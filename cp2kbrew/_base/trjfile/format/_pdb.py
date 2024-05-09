@@ -12,6 +12,6 @@ class PDBOpener(TrjOpenerInterface):
             if this_line.startswith("END"):
                 break
             coords.append(this_line.split()[3:6])
-        self._coords = coords
+        self._coord = coords
         self._natom = len(coords)
         del coords

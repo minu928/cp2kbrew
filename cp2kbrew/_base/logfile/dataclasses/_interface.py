@@ -9,6 +9,30 @@ class DataClass(metaclass=ABCMeta):
     _fmt = None
     _slice = None
 
+    def __add__(self, other):
+        return float(self.data) + other
+
+    def __sub__(self, other):
+        return float(self.data) - other
+
+    def __mul__(self, other):
+        return float(self.data) * other
+
+    def __truediv__(self, other):
+        return float(self.data) / other
+
+    def __pow__(self, other):
+        return float(self.data) ** other
+
+    def __float__(self) -> float:
+        return np.array(self.data).astype(float)
+
+    def __repr__(self) -> str:
+        return str(self.data)
+
+    def __len__(self) -> int:
+        return len(self.data)
+
     @property
     @abstractmethod
     def patterns(self) -> List[re.Pattern]:
