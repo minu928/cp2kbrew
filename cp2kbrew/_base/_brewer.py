@@ -1,9 +1,9 @@
 import numpy as np
 from tqdm import tqdm
 from copy import deepcopy
-from .logfile import LogOpener, default_units
+from cp2kbrew import unit
 from .trjfile import trjopener
-from cp2kbrew.unit import UnitConvert
+from .logfile import LogOpener, default_units
 
 
 class CP2KBrewer(object):
@@ -66,7 +66,7 @@ class CP2KBrewer(object):
         assert self._is_gathered_data, f"Please gather the data."
         for to_key, to_unit in to.items():
             what = f"{self.units[to_key]}{sep}{to_unit}"
-            multiplicity = float(UnitConvert(what=what))
+            multiplicity = float(unit.convert(what=what))
             self.units[to_key] = to_unit
             this_val = getattr(self, to_key)
             setattr(self, to_key, multiplicity * this_val)
