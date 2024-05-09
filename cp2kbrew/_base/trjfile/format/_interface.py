@@ -7,19 +7,20 @@ class TrjOpenerInterface(metaclass=ABCMeta):
     skip_head: int = 0
 
     def __init__(self, trjfile: str) -> None:
+        self._trjfile = trjfile
         self._frame = -1
         self._energy = None
-        self._coords = None
+        self._coord = None
         self.trjdata_generator = self._generate_trjdata(trjfile=trjfile)
         self.nextframe()
 
     @property
-    def natoms(self) -> int:
-        return int(self._natoms)
+    def natom(self) -> int:
+        return int(self._natom)
 
     @property
-    def coords(self):
-        return np.array(self._coords).astype(float)
+    def coord(self):
+        return np.array(self._coord).astype(float)
 
     @property
     def energy(self):
@@ -30,8 +31,11 @@ class TrjOpenerInterface(metaclass=ABCMeta):
         return self._frame
 
     def nextframe(self) -> None:
-        self._frame += 1
         next(self.trjdata_generator)
+        self._frame += 1
+
+    def reset(self) -> None:
+        self.__init__(trjfile=self._trjfile)
 
     def _generate_trjdata(self, trjfile: str):
         with open(trjfile, "r") as f:

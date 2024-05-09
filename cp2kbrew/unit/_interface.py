@@ -3,19 +3,19 @@ from abc import ABCMeta, abstractmethod
 
 class UnitConvertInterface(metaclass=ABCMeta):
     def __add__(self, other):
-        return self.value + float(other)
+        return float(self.value) + other
 
     def __sub__(self, other):
-        return self.value - float(other)
+        return float(self.value) - other
 
     def __mul__(self, other):
-        return self.value * float(other)
+        return float(self.value) * other
 
     def __truediv__(self, other):
-        return self.value / float(other)
+        return float(self.value) / other
 
     def __pow__(self, other):
-        return self.value**other
+        return float(self.value) ** other
 
     def __float__(self) -> float:
         return float(self.value)

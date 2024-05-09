@@ -1,9 +1,4 @@
-from .format import XYZOpener, PDBOpener, TrjOpenerInterface
-
-trjopener: dict[str, type[TrjOpenerInterface]] = {
-    "xyz": XYZOpener,
-    "pdb": PDBOpener,
-}
+from ._opener import TrjOpener
 
 
-__all__ = ["trjopener"]
+__all__ = ["TrjOpener"]

@@ -22,13 +22,14 @@ class UnitConvert(UnitConvertInterface):
         return self._inspected_what
 
     def inspect(self, what, sep: str):
-        what = self._encode_specialcase(what=what)
+        what = "(" + self._encode_specialcase(what=what)
         replace_dict_list = [val for key, val in support_items.items() if key != "special"]
         for replace_dict in replace_dict_list:
             for key, val in replace_dict.items():
                 what = what.replace(key, str(f"{val}"))
         what = what.replace("^", "**")
-        what = what.replace(sep, "/")
+        what = what.replace(sep, ")/(")
+        what += ")"
         return what
 
     def _encode_specialcase(self, what: str):

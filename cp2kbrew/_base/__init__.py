@@ -1,6 +1,5 @@
 from .logfile import LogOpener
-from .trjfile import trjopener
-from ._brewer import CP2KBrewer
+from .trjfile import TrjOpener
 
 
-__all__ = ["CP2KBrewer", "LogOpener", "trjopener"]
+__all__ = ["LogOpener", "TrjOpener"]

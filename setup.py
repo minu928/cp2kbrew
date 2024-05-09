@@ -18,7 +18,6 @@ setup(
     install_requies=[
         "numpy>=1.21.0",
         "pandas<2.0.0",
-        "matplotlib",
         "tqdm>=4.0.0",
         "scipy>1.0.0",
     ],
