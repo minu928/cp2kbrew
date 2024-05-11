@@ -3,6 +3,7 @@ from cp2kbrew.__info__ import __contributors__
 from cp2kbrew._utils import save, unit
 from cp2kbrew._base import LogOpener, TrjOpener
 from cp2kbrew._main import Home
+from cp2kbrew._error import Alchemist
 
 __all__ = [
     "__version__",
@@ -10,6 +11,7 @@ __all__ = [
     "Home",
     "LogOpener",
     "TrjOpener",
+    "Alchemist",
     "unit",
     "save",
 ]

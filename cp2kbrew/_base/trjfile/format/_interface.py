@@ -8,7 +8,7 @@ class TrjOpenerInterface(metaclass=ABCMeta):
 
     def __init__(self, trjfile: str) -> None:
         self._trjfile = trjfile
-        self._frame = -1
+        self._frame = 0
         self._energy = None
         self._coord = None
         self.trjdata_generator = self._generate_trjdata(trjfile=trjfile)

@@ -22,7 +22,7 @@ class LogOpener(object):
 
     def __init__(self, logfile: str) -> None:
         self.restart_frames = []
-        self._frame = -1
+        self._frame = 0
         self.is_gathered = False
         self.unit = deepcopy(default_units)
         self.dataclasses: dict[str, type[DataClass]] = {
@@ -73,7 +73,7 @@ class LogOpener(object):
         return [re.compile(ep) for ep in self._end_patterns]
 
     @property
-    def restart_pattenrs(self) -> List[re.Pattern]:
+    def restart_patterns(self) -> List[re.Pattern]:
         return [re.compile(rp) for rp in self._restart_patterns]
 
     @property
@@ -89,9 +89,9 @@ class LogOpener(object):
                 for end_pattern in self.end_patterns:
                     if end_pattern.match(this_line):
                         yield self.dataclasses
-                for restart_pattern in self.restart_pattenrs:
+                for restart_pattern in self.restart_patterns:
                     if restart_pattern.match(this_line):
-                        self.restart_frames = self.nframe
+                        self.restart_frames.append(self.nframe)
                 for dataclass in self.dataclasses.values():
                     dataclass.decode_line(line=this_line)
 
@@ -136,3 +136,8 @@ class LogOpener(object):
             self.unit[to_key] = to_unit
             this_val = getattr(self, to_key)
             setattr(self, f"_{to_key}", multiplicity * this_val)
+
+    def modify_data(self, leftframes: int):
+        for unit in self.unit.keys():
+            setattr(self, f"_{unit}", getattr(self, unit)[leftframes])
+        self._frame = len(self.energy)

@@ -21,7 +21,7 @@ class Home(object):
         self._update_unit()
 
     @property
-    def openers(self) -> dict[str, type[LogOpener] | type[TrjOpener]]:
+    def openers(self) -> dict[str, LogOpener | TrjOpener]:
         return {"log": self._log_opener, "trj": self._trj_opener}
 
     @property
