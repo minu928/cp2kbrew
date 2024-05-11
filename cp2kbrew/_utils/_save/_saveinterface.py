@@ -4,7 +4,7 @@ from copy import deepcopy
 from abc import ABCMeta, abstractmethod
 
 
-class ToInterface(metaclass=ABCMeta):
+class SaveInterface(metaclass=ABCMeta):
     _alias = {"cell": ("box", "boxes", "cells")}
 
     def __init__(self, *, requests_list: list[str] = None) -> None:

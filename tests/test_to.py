@@ -11,7 +11,7 @@ if __name__ == "__main__":
     outlog = f"{MOTHER_PATH}/src/files/cp2k/2022.2/npt/out.log"
     print(f"[SAVE] the Single Point Calculation")
     logopener = cb.LogOpener(outlog)
-    cb.to(fmt="deepmd").save(obj=logopener, path="./tmp", element_order=["H", "O"])
+    cb.save(fmt="deepmd@npy", obj=logopener, path="./tmp", element_order=["H", "O"])
     print(f"[SAVE] the Multi Point Calculation")
     logopener = cb.LogOpener(outlog).gather()
-    cb.to(fmt="deepmd").save(obj=logopener, path="./tmp", element_order=["H", "O"])
+    cb.save(fmt="deepmd@npy", obj=logopener, path="./tmp", element_order=["H", "O"])

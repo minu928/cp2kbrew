@@ -1,9 +1,9 @@
 import os
 import numpy as np
-from .._interface import ToInterface
+from .._saveinterface import SaveInterface
 
 
-class ToDeePMD(ToInterface):
+class SaveDeePMDNPY(SaveInterface):
     _default_requests_list = ("force", "atom", "virial", "coord", "box", "energy")
     _default_units = {
         "cell": "angstrom",
