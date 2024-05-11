@@ -42,7 +42,7 @@ class LogOpener(object):
 
     @property
     def cell(self) -> type[np.ndarray]:
-        return self._cell
+        return self._cell[..., None] * np.eye(3, 3)
 
     @property
     def coord(self) -> type[np.ndarray]:
@@ -59,6 +59,12 @@ class LogOpener(object):
     @property
     def stress(self) -> type[np.ndarray]:
         return self._stress
+
+    @property
+    def virial(self) -> type[np.ndarray]:
+        self.unit["virial"] = f"{self.unit['stress']}*{self.unit['cell']}^3"
+        self._virial = self.stress * np.prod(self._cell, axis=-1)[:, None, None]
+        return self._virial
 
     @property
     def end_patterns(self) -> List[re.Pattern]:
@@ -106,6 +112,7 @@ class LogOpener(object):
 
         self.update_data(data=__data.copy())
         self.is_gathered = True
+        return self
 
     def update_data(self, data: dict[str, type[np.ndarray]], *, is_dataclass: bool = False):
         for key, val in data.items():
