@@ -43,7 +43,7 @@ class TrjOpener(object):
     def gather(self, *, verbose: bool = True, is_reset: bool = True, what: tuple = ("energy", "coord")):
         self.reset()
         if verbose:
-            pbar = tqdm()
+            pbar = tqdm(desc="[OPEN TRJ]")
         __data = {key: [getattr(self.__trjopener, key)] for key in what}
         while True:
             try:
@@ -51,13 +51,15 @@ class TrjOpener(object):
                 for key in what:
                     __data[key].append(getattr(self.__trjopener, key))
                 if verbose:
-                    pbar.update(n=1.0)
+                    pbar.update(n=1)
             except:
                 break
         for key, val in __data.items():
             setattr(self, f"_{key}", np.array(val))
 
-    def convert_unit(self, to: dict[str, str], *, sep: str = "->"):
+    def convert_unit(self, to: dict[str, str], *, sep: str = "->", ignore_notinclude: bool = False):
+        if ignore_notinclude:
+            to = {key: val for key, val in to.items() if hasattr(self, key)}
         for to_key, to_unit in to.items():
             what = f"{self.unit[to_key]}{sep}{to_unit}"
             multiplicity = float(unit.convert(what=what))

@@ -18,9 +18,10 @@ default_units = {
 
 class LogOpener(object):
     _end_patterns = ["\s+Extrapolation method:\s+ASPC\s+", "\s+\-\s+DBCSR STATISTICS\s+\-\s+"]
+    _restart_patterns = [r"\s+\*\s+RESTART INFORMATION\s+\*\s+"]
 
     def __init__(self, logfile: str) -> None:
-        self.logfile = logfile
+        self.restart_frames = []
         self._frame = -1
         self.is_gathered = False
         self.unit = deepcopy(default_units)
@@ -32,6 +33,7 @@ class LogOpener(object):
             "stress": Stress(),
             "coord": Coord(),
         }
+        self.logfile = logfile
         self.logdata_generator = self.__generate_data_from_logfile(logfile=self.logfile)
         self.nextframe()
         self.update_data(data=self.dataclasses, is_dataclass=True)
@@ -71,6 +73,10 @@ class LogOpener(object):
         return [re.compile(ep) for ep in self._end_patterns]
 
     @property
+    def restart_pattenrs(self) -> List[re.Pattern]:
+        return [re.compile(rp) for rp in self._restart_patterns]
+
+    @property
     def nframe(self) -> int:
         return self._frame
 
@@ -83,6 +89,9 @@ class LogOpener(object):
                 for end_pattern in self.end_patterns:
                     if end_pattern.match(this_line):
                         yield self.dataclasses
+                for restart_pattern in self.restart_pattenrs:
+                    if restart_pattern.match(this_line):
+                        self.restart_frames = self.nframe
                 for dataclass in self.dataclasses.values():
                     dataclass.decode_line(line=this_line)
 
