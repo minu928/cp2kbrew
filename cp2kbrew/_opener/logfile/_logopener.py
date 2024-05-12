@@ -38,6 +38,9 @@ class LogOpener(object):
         self.nextframe()
         self.update_data(data=self.dataclasses, is_dataclass=True)
 
+    def __repr__(self) -> str:
+        return self.__class__.__name__
+
     @property
     def atom(self) -> type[np.ndarray]:
         return self._atom

@@ -16,6 +16,9 @@ class TrjOpener(object):
         self._energy = self.__trjopener.energy[None, ...]
         self.unit = {"energy": "hatree", "coord": "angstrom"}
 
+    def __repr__(self) -> str:
+        return self.__class__.__name__
+
     @property
     def coord(self) -> type[ndarray]:
         return self._coord

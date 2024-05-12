@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from cp2kbrew._main import Home
 
 
 def calc_dEnergy(e1, e2, *, std: float = 1e-10):
@@ -7,7 +6,7 @@ def calc_dEnergy(e1, e2, *, std: float = 1e-10):
 
 
 class ErrorCodeInterface(metaclass=ABCMeta):
-    def __init__(self, home: Home) -> None:
+    def __init__(self, home) -> None:
         self._home = home
 
     def __repr__(self) -> str:

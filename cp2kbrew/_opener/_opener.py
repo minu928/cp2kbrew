@@ -1,11 +1,11 @@
 import numpy as np
 from numpy.typing import NDArray
-from cp2kbrew._base.logfile import LogOpener
-from cp2kbrew._base.trjfile import TrjOpener
+from cp2kbrew._opener.logfile import LogOpener
+from cp2kbrew._opener.trjfile import TrjOpener
 from cp2kbrew._utils import save
 
 
-class Home(object):
+class Opener(object):
     def __init__(
         self,
         logfile: str,

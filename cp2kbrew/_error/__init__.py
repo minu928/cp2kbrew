@@ -1,4 +1,4 @@
-from ._alchemist import Alchemist
+from ._doctor import Doctor
 
 
-__all__ = ["Alchemist"]
+__all__ = ["Doctor"]
