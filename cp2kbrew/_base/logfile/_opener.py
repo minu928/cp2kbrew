@@ -129,7 +129,9 @@ class LogOpener(object):
                 val = np.array(val.data)[None, :]
             setattr(self, f"_{key}", val)
 
-    def convert_unit(self, to: dict[str, str], *, sep: str = "->"):
+    def convert_unit(self, to: dict[str, str], *, sep: str = "->", ignore_notinclude: bool = False):
+        if ignore_notinclude:
+            to = {key: val for key, val in to.items() if hasattr(self, key)}
         for to_key, to_unit in to.items():
             what = f"{self.unit[to_key]}{sep}{to_unit}"
             multiplicity = float(unit.convert(what=what))

@@ -70,6 +70,7 @@ class TrjOpener(object):
     def reset(self) -> None:
         self.__init__(trjfile=self._trjfile, fmt=self.fmt)
 
-    def cut(self, frames: int):
+    def modify_data(self, leftframes: int):
         for unit in self.unit.keys():
-            setattr(self, f"_{unit}", getattr(self, unit)[frames])
+            setattr(self, f"_{unit}", getattr(self, unit)[leftframes])
+        self._frame = len(self.energy)
