@@ -13,6 +13,31 @@ cd cp2kbrew
 pip install .
 ```
 
+## Opener
+```python
+import cp2kbrew as cpb
+
+
+opener = cpb.Opener("somewhere/out.log", trjfile="somewhere/trj.xyz")
+print(f"nFRAME: {opener.nframe}")
+print(f"ENERGY: {opener.energy}")
+print(f"FORCE : {opener.force}")
+print(f"STRESS: {opener.stress}")
+print(f"COORD : {opener.coord}")
+print(f"CELL  : {opener.cell}")
+```
+## Doctor
+```python
+import cp2kbrew as cpb
+
+
+opener = cpb.Opener("somewhere/out.log", trjfile="somewhere/trj.xyz")
+doctor = cpb.Doctor(opener)
+doctor.check()
+print(doctor.errorcodes)
+doctor.fix()
+```
+
 ## LogOpener
 ### Single Frame Data
 
@@ -99,17 +124,4 @@ trjopener = cpb.TrjOpener(trjfile=trjxyz)
 print(f"ENERGY: {trjopener.energy[0,0]:.5f} {trjopener.unit['energy']}")
 trjopener.convert_unit(to={"energy": "eV"})
 print(f"ENERGY: {trjopener.energy[0,0]:.5f} {trjopener.unit['energy']}")
-```
-## Further Functions (TODO)
-### Doctor
-This function will figure out the **Error of LOG or TRJ**  
-And change the data
-```python
-import cp2kbrew as cb
-
-
-logfile_path = "somewere/out.log"
-trjfile_path = "somewere/out.xyz"
-cp2kbrewer = cb.CP2KBrewer(logfile=logfile_path, trjfile=trjfile_path, ignore_error=True)
-cp2kbrewer.doctor()
-```
+``
