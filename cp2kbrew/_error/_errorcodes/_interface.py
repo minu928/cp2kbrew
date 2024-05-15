@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from cp2kbrew._opener import Opener
 
 
 def calc_dEnergy(e1, e2, *, std: float = 1e-10):
@@ -6,23 +7,23 @@ def calc_dEnergy(e1, e2, *, std: float = 1e-10):
 
 
 class ErrorCodeInterface(metaclass=ABCMeta):
-    def __init__(self, home) -> None:
-        self._home = home
+    def __init__(self, opener: Opener) -> None:
+        self._opener = opener
 
     def __repr__(self) -> str:
         return self.error
 
     @property
     def log_energy(self):
-        return self._home._log_opener.energy
+        return self._opener._log_opener.energy
 
     @property
     def trj_energy(self):
-        return self._home._trj_opener.energy
+        return self._opener._trj_opener.energy
 
     @property
     def restart_frames(self) -> list[int]:
-        return self._home._log_opener.restart_frames
+        return self._opener._log_opener.restart_frames
 
     @property
     @abstractmethod

@@ -1,15 +1,19 @@
 import numpy as np
 from cp2kbrew._error._errorcodes import errorcodes_library
+from cp2kbrew._opener import Opener
 
 
 class Doctor:
-    def __init__(self, home) -> None:
-        self._errocode_library = {name: errorcode(home=home) for name, errorcode in errorcodes_library.items()}
+    def __init__(self, opener: Opener) -> None:
+        self._errocode_library = {name: errorcode(opener=opener) for name, errorcode in errorcodes_library.items()}
         self._errorcodes = []
-        self.openers = home.openers
+        self.openers = opener.openers
 
     def __len__(self) -> int:
         return len(self._errorcodes)
+
+    def __repr__(self) -> str:
+        return self.__class__.__name__
 
     @property
     def errorcodes(self) -> list[str]:

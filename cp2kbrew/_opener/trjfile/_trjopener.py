@@ -47,6 +47,7 @@ class TrjOpener(object):
         self.reset()
         if verbose:
             pbar = tqdm(desc="[OPEN TRJ]")
+            pbar.update(n=1)
         __data = {key: [getattr(self.__trjopener, key)] for key in what}
         while True:
             try:

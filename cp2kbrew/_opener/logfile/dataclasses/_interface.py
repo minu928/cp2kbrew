@@ -6,7 +6,6 @@ from abc import abstractmethod, ABCMeta
 
 class DataClass(metaclass=ABCMeta):
     is_request_control: bool = False
-    is_prohibited_twice_in_one_frame: bool = False
     _fmt = None
     _slice = None
 

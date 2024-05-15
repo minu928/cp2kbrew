@@ -6,7 +6,7 @@ class ErrorCode001(ErrorCodeInterface):
     error = "RESTART_FIRST_FRAME_ERROR"
 
     def fix(self) -> None:
-        self._home._log_opener.modify_data(leftframes=slice(1, None))
+        self._opener._log_opener.modify_data(leftframes=slice(1, None))
 
     def check(self) -> bool:
         ## * nFrames
