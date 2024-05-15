@@ -13,115 +13,47 @@ cd cp2kbrew
 pip install .
 ```
 
-## Opener
+## Tutorial
+
+## Open the files
 ```python
 import cp2kbrew as cpb
 
 
-opener = cpb.Opener("somewhere/out.log", trjfile="somewhere/trj.xyz")
-print(f"nFRAME: {opener.nframe}")
-print(f"ENERGY: {opener.energy}")
-print(f"FORCE : {opener.force}")
-print(f"STRESS: {opener.stress}")
-print(f"COORD : {opener.coord}")
-print(f"CELL  : {opener.cell}")
-```
-## Doctor
-```python
-import cp2kbrew as cpb
-
-
-opener = cpb.Opener("somewhere/out.log", trjfile="somewhere/trj.xyz")
-doctor = cpb.Doctor(opener)
-doctor.check()
-print(doctor.errorcodes)
-doctor.fix()
+alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
+print(f"nFRAME: {alchemist.nframe}")
+print(f"ENERGY: {alchemist.energy}")
+print(f"FORCE : {alchemist.force}")
+print(f"STRESS: {alchemist.stress}")
+print(f"COORD : {alchemist.coord}")
+print(f"CELL  : {alchemist.cell}")
 ```
 
-## LogOpener
-### Single Frame Data
-
+## Fix the data
 ```python
 import cp2kbrew as cpb
 
 
-logfile_path = "somewere/out.log"
-
-logopener = cpb.LogOpener(logfile=logfile_path)
-print(f"nFRAME: {logopener.nframe}")
-print(f"ENERGY: {logopener.energy}")
-print(f"FORCE : {logopener.force}")
-print(f"STRESS: {logopener.stress}")
-print(f"COORD : {logopener.coord}")
-print(f"CELL  : {logopener.cell}")
-```
-### nFrame Data
-```python
-import cp2kbrew as cpb
-
-
-logfile_path = "somewere/out.log"
-
-logopener = cpb.LogOpener(logfile=outlog)
-logopener.gather()
-print(f"nFRAME: {logopener.nframe}")
-print(f"ENERGY: {logopener.energy}")
-print(f"FORCE : {logopener.force}")
-print(f"STRESS: {logopener.stress}")
-print(f"COORD : {logopener.coord}")
-print(f"CELL  : {logopener.cell}")
+alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
+print(f"CHECK: {alchemist.doctor.check()}")
+print(f"FIX  : {alchemist.doctor.fix()}")
+print(f"CHECK: {alchemist.doctor.check()}")
 ```
 
-### Unit Conversion
+## ConvertUnit
 ```python
 import cp2kbrew as cpb
 
 
-logfile_path = "somewere/out.log"
-
-logopener = cpb.LogOpener(logfile=outlog)
-print(f"ENERGY: {logopener.energy[0,0]:.5f} {logopener.unit['energy']}")
-logopener.convert_unit(to={"energy": "eV"})
-print(f"ENERGY: {logopener.energy[0,0]:.5f} {logopener.unit['energy']}")
+alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
+alchemist.convert_unit(to={"energy": "hatree->eV"})
 ```
 
-## TrjOpener
-### Single Frame Data
-
+## Save
 ```python
 import cp2kbrew as cpb
 
 
-trjfile_path = "somewere/out.xyz"
-
-trjopener = cpb.TrjOpener(trjfile=trjfile_path)
-print(f"nFRAME: {trjopener.nframe}")
-print(f"ENERGY: {trjopener.energy}")
-print(f"COORD : {trjopener.coord}")
+alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
+alchemist.save(fmt="deepmd@npy", path="./tmp", element_order=["H", "O"])
 ```
-### nFrame Data
-```python
-import cp2kbrew as cpb
-
-
-trjfile_path = "somewere/out.xyz"
-
-trjopener = cpb.TrjOpener(trjfile=trjfile_path)
-trjopener.gather()
-print(f"nFRAME: {trjopener.nframe}")
-print(f"ENERGY: {trjopener.energy}")
-print(f"COORD : {trjopener.coord}")
-```
-
-### Unit Conversion
-```python
-import cp2kbrew as cpb
-
-
-trjfile_path = "somewere/out.xyz"
-
-trjopener = cpb.TrjOpener(trjfile=trjxyz)
-print(f"ENERGY: {trjopener.energy[0,0]:.5f} {trjopener.unit['energy']}")
-trjopener.convert_unit(to={"energy": "eV"})
-print(f"ENERGY: {trjopener.energy[0,0]:.5f} {trjopener.unit['energy']}")
-``
