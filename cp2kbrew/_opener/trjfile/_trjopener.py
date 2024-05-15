@@ -2,7 +2,7 @@ import numpy as np
 from numpy import ndarray
 from tqdm import tqdm
 from .format import XYZOpener, PDBOpener, TrjOpenerInterface
-from cp2kbrew import unit
+from cp2kbrew._utils import unit
 
 trjopener_dict: dict[str, type[TrjOpenerInterface]] = {"xyz": XYZOpener, "pdb": PDBOpener}
 

@@ -54,6 +54,10 @@ class Opener(object):
     def virial(self) -> NDArray:
         return self._log_opener.virial
 
+    @property
+    def nframe(self) -> int:
+        return self._log_opener.nframe
+
     def gather(self, *, verbose: bool = True, is_reset: bool = True):
         self._log_opener.gather(verbose=verbose, is_reset=is_reset)
         if self.__is_trj_opener_included:

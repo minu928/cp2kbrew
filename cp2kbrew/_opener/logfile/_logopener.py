@@ -4,7 +4,8 @@ from tqdm import tqdm
 from typing import List
 from copy import deepcopy
 from .dataclasses import *
-from cp2kbrew import unit
+from cp2kbrew._utils import unit
+
 
 default_units = {
     "cell": "angstrom",
