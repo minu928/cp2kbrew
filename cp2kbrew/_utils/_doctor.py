@@ -38,7 +38,6 @@ class Doctor:
             else:
                 candiate_indexes[frame] = std_indices[0]
                 success += 1
-
         if success == nframe_trj:
             self._openers["log"].modify_data(leftframes=candiate_indexes)
             self._energy = self._load_energy()
