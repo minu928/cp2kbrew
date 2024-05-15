@@ -2,7 +2,7 @@ import numpy as np
 from numpy import ndarray
 from tqdm import tqdm
 from .format import XYZOpener, PDBOpener, TrjOpenerInterface
-from cp2kbrew import unit
+from cp2kbrew._utils import unit
 
 trjopener_dict: dict[str, type[TrjOpenerInterface]] = {"xyz": XYZOpener, "pdb": PDBOpener}
 
@@ -47,6 +47,7 @@ class TrjOpener(object):
         self.reset()
         if verbose:
             pbar = tqdm(desc="[OPEN TRJ]")
+            pbar.update(n=1)
         __data = {key: [getattr(self.__trjopener, key)] for key in what}
         while True:
             try:

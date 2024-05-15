@@ -7,7 +7,6 @@ class Energy(DataClass):
     patterns = [re.compile(r"\s+ENERGY\|\s+Total\s+FORCE_EVAL\s+\(\s+QS\s+\)\s+energy\s+\[a.u.\]\:\s+(?P<energy>\S+)\s+")]
     data = 0.0
     _fmt = float
-    is_prohibited_twice_in_one_frame = True
 
     def _inner_match_patterns(self, data):
         self.data = np.array([data["energy"]]).astype(self._fmt)
