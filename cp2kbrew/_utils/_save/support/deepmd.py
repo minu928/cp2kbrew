@@ -26,6 +26,8 @@ class SaveDeePMDNPY(SaveInterface):
             if requests_name == "cell":
                 requests_name = "box"
             nframe = len(attr)
+            if requests_name != "energy":
+                attr = attr.reshape(nframe, -1)
             save_path = os.path.join(path, "set.000")
             os.makedirs(save_path, exist_ok=True)
-            np.save(os.path.join(save_path, requests_name), attr.reshape([nframe, -1]))
+            np.save(os.path.join(save_path, requests_name), attr)
