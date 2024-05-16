@@ -48,7 +48,7 @@ class LogOpener(object):
 
     @property
     def cell(self) -> type[np.ndarray]:
-        return self._cell[..., None] * np.eye(3, 3)
+        return self._cell
 
     @property
     def coord(self) -> type[np.ndarray]:
@@ -69,8 +69,8 @@ class LogOpener(object):
     @property
     def virial(self) -> type[np.ndarray]:
         self.unit["virial"] = f"{self.unit['stress']}*{self.unit['cell']}^3"
-        self._virial = self.stress * np.prod(self._cell, axis=-1)[:, None, None]
-        return self._virial
+        vol = np.array([np.linalg.det(cell) for cell in self.cell])
+        return self.stress * vol[:, None, None]
 
     @property
     def end_patterns(self) -> List[re.Pattern]:
@@ -130,7 +130,7 @@ class LogOpener(object):
     def update_data(self, data: dict[str, type[np.ndarray]], *, is_dataclass: bool = False):
         for key, val in data.items():
             if is_dataclass:
-                val = np.array(val.data)[None, :]
+                val = np.array([val.data])[None, :]
             setattr(self, f"_{key}", val)
 
     def convert_unit(self, to: dict[str, str], *, sep: str = "->", ignore_notinclude: bool = False):
@@ -145,5 +145,7 @@ class LogOpener(object):
 
     def modify_data(self, leftframes: int):
         for unit in self.unit.keys():
+            if unit == "virial":
+                continue
             setattr(self, f"_{unit}", getattr(self, unit)[leftframes])
         self._frame = len(self.energy)

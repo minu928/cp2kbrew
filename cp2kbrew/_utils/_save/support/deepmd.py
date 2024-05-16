@@ -23,6 +23,9 @@ class SaveDeePMDNPY(SaveInterface):
             type_raw_data = np.vectorize(element_dict.__getitem__)(firstframe_atom)
             np.savetxt(os.path.join(path, "type.raw"), type_raw_data, fmt="%d")
         else:
+            if requests_name == "cell":
+                requests_name = "box"
+            nframe = len(attr)
             save_path = os.path.join(path, "set.000")
             os.makedirs(save_path, exist_ok=True)
-            np.save(os.path.join(save_path, requests_name), attr)
+            np.save(os.path.join(save_path, requests_name), attr.reshape([nframe, -1]))
