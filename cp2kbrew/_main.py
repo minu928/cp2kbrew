@@ -3,8 +3,11 @@ from cp2kbrew._utils import Doctor
 
 
 class Alchemist(Opener):
-    def __init__(self, logfile: str, trjfile: str = None, *, trjfmt: str = "auto", mode: str = None) -> None:
+    support_modes = ("auto", "debug")
+
+    def __init__(self, logfile: str, trjfile: str = None, *, trjfmt: str = "auto", mode: str = "auto") -> None:
         super().__init__(logfile, trjfile, trjfmt=trjfmt, mode=mode)
+        self._act_by_mode(mode=mode)
 
     def __repr__(self) -> str:
         status = ""
@@ -28,3 +31,14 @@ class Alchemist(Opener):
     @property
     def doctor(self):
         return Doctor(opener=self)
+
+    def _act_by_mode(self, mode: str):
+        assert mode in self.support_modes, f"mode({mode}) is not supported."
+        if mode == "auto":
+            print(f"[STEP 01] -> gather")
+            self.gather()
+            print(f"[STEP 02] -> check")
+            if not all(list(self.doctor.check().values())):
+                print(f"[STEP 03] -> fix")
+                fixed_result = self.doctor.fix()
+                assert fixed_result in ["SUCCESS", "PERFECT"], f"fixing the data is failed.."

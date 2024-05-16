@@ -130,7 +130,7 @@ class LogOpener(object):
     def update_data(self, data: dict[str, type[np.ndarray]], *, is_dataclass: bool = False):
         for key, val in data.items():
             if is_dataclass:
-                val = np.array(val.data)[None, :]
+                val = np.array([val.data])[None, :]
             setattr(self, f"_{key}", val)
 
     def convert_unit(self, to: dict[str, str], *, sep: str = "->", ignore_notinclude: bool = False):
