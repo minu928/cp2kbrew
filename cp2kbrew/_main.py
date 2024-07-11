@@ -38,7 +38,8 @@ class Alchemist(Opener):
             print(f"[STEP 01] -> gather")
             self.gather()
             print(f"[STEP 02] -> check")
-            if not all(list(self.doctor.check().values())):
+            if not all(tuple(self.doctor.check().values())):
                 print(f"[STEP 03] -> fix")
                 fixed_result = self.doctor.fix()
+                print(f"[RESULT]: {fixed_result}")
                 assert fixed_result in ["SUCCESS", "PERFECT"], f"fixing the data is failed.."
