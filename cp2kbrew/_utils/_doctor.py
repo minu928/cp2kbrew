@@ -21,24 +21,28 @@ class Doctor:
         if np.all(list(self.check(tol=tol).values())):
             return "PERFECT"
 
-        log_energy = self._energy["log"]
         success = 0
-        nframe_trj = len(self._energy["trj"])
-        candiate_indexes = np.zeros(nframe_trj, dtype=int)
+        log_energy = self._energy["log"]
+        target_nframe = len(self._energy["trj"])
+        candiate_indexes = np.empty(target_nframe, dtype=int)
 
         for frame, trj_energy in enumerate(self._energy["trj"]):
             deviation = calc_energy_deviation(trj_energy, log_energy, tol=tol)
             std_indices = np.where(deviation)[0]
             n_std = len(std_indices)
             if n_std == 0:
-                raise ValueError(f"There is no log data in frame ({frame})")
+                assert frame == target_nframe - 1, f"There is no log data in frame ({frame})"
+                print(f"\tFinal frame data is empty in LOG file.")
+                target_nframe -= 1
+                candiate_indexes = candiate_indexes[:-1]
+
             elif n_std == 1:
                 candiate_indexes[frame] = std_indices
                 success += 1
             else:
                 candiate_indexes[frame] = std_indices[0]
                 success += 1
-        if success == nframe_trj:
+        if success == target_nframe:
             self._openers["log"].modify_data(leftframes=candiate_indexes)
             self._energy = self._load_energy()
             return "SUCCESS"
