@@ -17,43 +17,42 @@ pip install .
 
 ## Open the files
 ```python
-import cp2kbrew as cpb
+import cp2kbrew as cb
 
 
-alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
-print(f"nFRAME: {alchemist.nframe}")
-print(f"ENERGY: {alchemist.energy}")
-print(f"FORCE : {alchemist.force}")
-print(f"STRESS: {alchemist.stress}")
-print(f"COORD : {alchemist.coord}")
-print(f"CELL  : {alchemist.cell}")
+brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
+print(f"nFRAME: {brewer.nframe}")
+print(f"ENERGY: {brewer.energy}")
+print(f"FORCE : {brewer.force}")
+print(f"STRESS: {brewer.stress}")
+print(f"COORD : {brewer.coord}")
+print(f"CELL  : {brewer.cell}")
 ```
 
 ## Fix the data
 ```python
-import cp2kbrew as cpb
+import cp2kbrew as cb
 
 
-alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
-print(f"CHECK: {alchemist.doctor.check()}")
-print(f"FIX  : {alchemist.doctor.fix()}")
-print(f"CHECK: {alchemist.doctor.check()}")
+brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
+error = brewer.check()
+brewer.fix(error)
 ```
 
 ## ConvertUnit
 ```python
-import cp2kbrew as cpb
+import cp2kbrew as cb
 
 
-alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
-alchemist.convert_unit(to={"energy": "hatree->eV"})
+brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
+brewer.convert_unit(to={"energy": "hatree->eV"})
 ```
 
 ## Save
 ```python
-import cp2kbrew as cpb
+import cp2kbrew as cb
 
 
-alchemist = cpb.Alchemist("somewhere/out.log", "somewhere/out.xyz")
-alchemist.save(fmt="deepmd@npy", path="./tmp", element_order=["H", "O"])
+brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
+brewer.save(fmt="deepmd@npy", path="./tmp", element_order=["H", "O"])
 ```
