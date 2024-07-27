@@ -4,7 +4,7 @@ if __name__ == "__main__":
 
     MOTHER_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(MOTHER_PATH)
-    import cp2kbrew as cb
+    import cp2kbrew2 as cb
 
     trjpdb = f"{MOTHER_PATH}/src/files/cp2k/2022.2/trajectory_format/test.pdb"
     trjxyz = f"{MOTHER_PATH}/src/files/cp2k/2022.2/npt/TEST-pos-1.xyz"

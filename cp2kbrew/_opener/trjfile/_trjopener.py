@@ -2,7 +2,7 @@ import numpy as np
 from numpy import ndarray
 from tqdm import tqdm
 from .format import XYZOpener, PDBOpener, TrjOpenerInterface
-from cp2kbrew._utils import unit
+from cp2kbrew.tools import unit
 
 trjopener_dict: dict[str, type[TrjOpenerInterface]] = {"xyz": XYZOpener, "pdb": PDBOpener}
 
@@ -46,7 +46,7 @@ class TrjOpener(object):
     def gather(self, *, verbose: bool = True, is_reset: bool = True, what: tuple = ("energy", "coord")):
         self.reset()
         if verbose:
-            pbar = tqdm(desc="[OPEN TRJ]")
+            pbar = tqdm(desc="[OPEN TRJ]", unit=" frame")
             pbar.update(n=1)
         __data = {key: [getattr(self.__trjopener, key)] for key in what}
         while True:

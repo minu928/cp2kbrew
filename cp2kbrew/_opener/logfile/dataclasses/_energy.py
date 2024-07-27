@@ -10,4 +10,4 @@ class Energy(DataClass):
 
     def _inner_match_patterns(self, data):
         # self.data = np.array([data["energy"]]).astype(self._fmt)
-        self.data = float(data["energy"])
+        self.data = [float(data["energy"])]
