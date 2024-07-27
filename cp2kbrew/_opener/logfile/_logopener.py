@@ -109,7 +109,7 @@ class LogOpener(object):
         if is_reset:
             self.reset()
         if verbose:
-            pbar = tqdm(desc="[OPEN LOG]")
+            pbar = tqdm(desc="[OPEN LOG]", unit=" frame")
             pbar.update(n=1)
         __data = {key: [val.data] for key, val in self.dataclasses.items()}
         while True:
