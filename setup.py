@@ -12,9 +12,9 @@ del version_dict
 setup(
     name="cp2kbrew",
     version=version,
-    author="minu",
+    author="Knu",
     author_email="minu928@snu.ac.kr",
-    url="https://github.com/minu928/mdbrew",
+    url="https://github.com/minu928/cp2kbrew",
     install_requies=[
         "numpy>=1.21.0",
         "pandas<2.0.0",
