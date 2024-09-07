@@ -78,9 +78,16 @@ class Opener(object):
         self,
         fmt: str,
         *,
-        path: str = "./",
-        request_list: list = None,
-        element_order: list = None,
+        savepath: str = "./",
+        query_list: list = None,
         unit: dict[str, str] = None,
+        element_order: list = None,
     ) -> None:
-        save(fmt=fmt, obj=self, path=path, request_list=request_list, element_order=element_order, unit=unit)
+        save(
+            fmt=fmt,
+            obj=self,
+            savepath=savepath,
+            query_list=query_list,
+            unit=unit,
+            element_order=element_order,
+        )

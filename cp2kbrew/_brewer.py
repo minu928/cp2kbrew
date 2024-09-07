@@ -7,7 +7,6 @@ chk_tol = lambda a, b, tol: all(np.abs(a - b) < tol)
 
 
 class Brewer(Opener):
-
     def __init__(
         self,
         logfile: str,

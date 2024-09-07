@@ -1,27 +1,31 @@
-from .support import SaveDeePMDNPY
-from ._saveinterface import SaveInterface
+from . import fmt
+from ._saveinterface import saver_dict
 
-
-__all__ = []
-
-
-to_fmt_dict: dict[str, type[SaveInterface]] = {"deepmd@npy": SaveDeePMDNPY}
+__all__ = ["save"]
 
 
 def save(
     fmt: str,
     obj,
     *,
-    path: str = "./",
-    request_list: list = None,
-    element_order: list = None,
+    savepath: str = "./",
+    querylist: list = None,
     unit: dict[str, str] = None,
-) -> SaveInterface:
-    assert fmt in to_fmt_dict, f"To Support Error: {fmt} is not supported."
-    return to_fmt_dict[fmt]().save(
-        obj=obj,
-        path=path,
-        request_list=request_list,
-        element_order=element_order,
-        unit=unit,
+    **kwrgs,
+) -> None:
+    assert fmt in saver_dict, f"To Support Error: {fmt} is not supported."
+    save_object = saver_dict[fmt](querylist=querylist)
+
+    # * Convert the unit
+    if unit is not None and not hasattr(obj, "convert_unit"):
+        raise ValueError(f"Unit Conversion Failed: obj not has attribute 'convert_unit'")
+    unit = save_object.unit if unit is None else unit
+    obj.convert_unit(to=unit)
+
+    # * Send the query data
+    query_data = {query_name: getattr(obj, query_name) for query_name in save_object.querylist}
+    save_object.save(
+        savepath=savepath,
+        query_data=query_data,
+        kwrgs=kwrgs,
     )
