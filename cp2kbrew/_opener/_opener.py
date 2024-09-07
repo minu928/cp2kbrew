@@ -1,4 +1,3 @@
-from numpy import str_, float_
 from numpy.typing import NDArray
 from cp2kbrew._opener.logfile import LogOpener
 from cp2kbrew._opener.trjfile import TrjOpener
@@ -24,33 +23,33 @@ class Opener(object):
         return {"log": self.log, "trj": self.trj}
 
     @property
-    def atom(self) -> NDArray[str_]:
+    def atom(self) -> NDArray:
         return self.log.atom
 
     @property
-    def cell(self) -> NDArray[float_]:
+    def cell(self) -> NDArray:
         return self.log.cell
 
     @property
-    def coord(self) -> NDArray[float_]:
+    def coord(self) -> NDArray:
         if self.is_trj_included:
             return self.trj.coord
         return self.log.coord
 
     @property
-    def energy(self) -> NDArray[float_]:
+    def energy(self) -> NDArray:
         return self.log.energy
 
     @property
-    def force(self) -> NDArray[float_]:
+    def force(self) -> NDArray:
         return self.log.force
 
     @property
-    def stress(self) -> NDArray[float_]:
+    def stress(self) -> NDArray:
         return self.log.stress
 
     @property
-    def virial(self) -> NDArray[float_]:
+    def virial(self) -> NDArray:
         return self.log.virial
 
     @property
