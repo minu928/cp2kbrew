@@ -8,16 +8,24 @@ chk_tol = lambda a, b, tol: all(np.abs(a - b) < tol)
 
 class Brewer(Opener):
 
-    def __init__(self, logfile: str, trjfile: str = None, *, trjfmt: str = "auto", mode: Literal["auto", "manual"] = "auto",verbose:bool = True) -> None:
+    def __init__(
+        self,
+        logfile: str,
+        trjfile: str = None,
+        *,
+        trjfmt: str = "auto",
+        mode: Literal["auto", "manual"] = "auto",
+        verbose: bool = True,
+    ) -> None:
         super().__init__(logfile, trjfile, trjfmt=trjfmt)
         self.act_by_mode(mode=mode, verbose=verbose)
 
-
-    def act_by_mode(self, mode: Literal["auto", "manual"], *, verbose:bool = True):
+    def act_by_mode(self, mode: Literal["auto", "manual"], *, verbose: bool = True):
         if mode == "auto":
             self.gather(verbose=verbose)
-            error = self.check()
-            self.fix(error=error, verbose=verbose)            
+            if self.is_trj_included:
+                error = self.check()
+                self.fix(error=error, verbose=verbose)
 
     def check(self, *, tol: float = 1e-6) -> str:
         log_energies, trj_energies = self.log.energy, self.trj.energy
