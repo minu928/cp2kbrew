@@ -44,7 +44,7 @@ class SaveEXTXYZ(SaveInterface):
                 if "virial" in query_data:
                     infoline += f'virial="{" ".join(query_data["virial"][frame].flatten().astype(str))}" '
                 infoline += property_line + " "
-                infoline += 'pbc="True True True" '
+                infoline += 'pbc="T T T" '
                 infoline += "\n"
                 f.writelines(infoline)
                 np.savetxt(f, property_data[frame], fmt=property_fmt)
