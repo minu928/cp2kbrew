@@ -14,7 +14,7 @@ class SaveDeePMDNPY(SaveInterface):
         "energy": "eV",
         "force": "eV/angstrom",
     }
-    fmt = "deemd@npy"
+    fmt = "deepmd@npy"
 
     def save(
         self,

@@ -16,7 +16,7 @@ setup(
     author_email="minu928@snu.ac.kr",
     url="https://github.com/minu928/cp2kbrew",
     install_requies=[
-        "numpy>=1.21.0",
+        "numpy>=1.21.0,<2.0.0",
         "pandas<2.0.0",
         "tqdm>=4.0.0",
         "scipy>1.0.0",
