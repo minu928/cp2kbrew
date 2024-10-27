@@ -14,8 +14,7 @@ class Opener(object):
     ) -> None:
         self.log = LogOpener(logfile=logfile)
         self.is_trj_included: bool = trjfile is not None
-        if self.is_trj_included:
-            self.trj = TrjOpener(trjfile=trjfile, fmt=trjfmt)
+        self.trj = TrjOpener(trjfile=trjfile, fmt=trjfmt) if self.is_trj_included else None
         self._update_unit()
 
     @property
@@ -64,7 +63,8 @@ class Opener(object):
 
     def convert_unit(self, to: dict[str, str], *, sep="->") -> None:
         self.log.convert_unit(to=to, sep=sep)
-        self.trj.convert_unit(to=to, sep=sep, ignore_notinclude=True)
+        if self.is_trj_included:
+            self.trj.convert_unit(to=to, sep=sep, ignore_notinclude=True)
         self._update_unit()
 
     def _update_unit(self) -> None:
