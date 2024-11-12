@@ -1,7 +1,7 @@
 from . import fmt
 from ._saveinterface import saver_dict
 
-__all__ = ["save"]
+__all__ = ["save", "fmt"]
 
 
 def save(

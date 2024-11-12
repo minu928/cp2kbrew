@@ -1,12 +1,12 @@
-import numpy as np
 from typing import Literal
-from cp2kbrew._opener import Opener
+from numpy.typing import NDArray
+from cp2kbrew import doctor
+from cp2kbrew.tools import save, unit
+from cp2kbrew.opener.log import LogOpener
+from cp2kbrew.opener.trj import TrjOpener
 
-errors = ["None", "FirstRestartError", "LogIOError", "NoisyRestartError"]
-chk_tol = lambda a, b, tol: all(np.abs(a - b) < tol)
 
-
-class Brewer(Opener):
+class Brewer(object):
     def __init__(
         self,
         logfile: str,
@@ -15,72 +15,87 @@ class Brewer(Opener):
         trjfmt: str = "auto",
         mode: Literal["auto", "manual"] = "auto",
         verbose: bool = True,
+        units: str = None,
     ) -> None:
-        super().__init__(logfile, trjfile, trjfmt=trjfmt)
-        self.act_by_mode(mode=mode, verbose=verbose)
+        self.log = LogOpener(logfile=logfile)
+        self.is_trj_included: bool = trjfile is not None
+        self.trj = TrjOpener(trjfile=trjfile, fmt=trjfmt) if self.is_trj_included else None
+        self._act_by_mode(mode=mode, verbose=verbose)
+        self.convert_unit(unit.defaults if units is None else units)
 
-    def act_by_mode(self, mode: Literal["auto", "manual"], *, verbose: bool = True):
+    @property
+    def atom(self) -> NDArray:
+        return self.log.atom
+
+    @property
+    def cell(self) -> NDArray:
+        return self.log.cell
+
+    @property
+    def coord(self) -> NDArray:
+        if self.is_trj_included:
+            return self.trj.coord
+        return self.log.coord
+
+    @property
+    def energy(self) -> NDArray:
+        return self.log.energy
+
+    @property
+    def force(self) -> NDArray:
+        return self.log.force
+
+    @property
+    def stress(self) -> NDArray:
+        return self.log.stress
+
+    @property
+    def virial(self) -> NDArray:
+        return self.log.virial
+
+    @property
+    def nframe(self) -> int:
+        return self.log.nframe
+
+    def gather(self, *, verbose: bool = True, is_reset: bool = True):
+        self.log.gather(verbose=verbose, is_reset=is_reset)
+        if self.is_trj_included:
+            self.trj.gather(verbose=verbose, is_reset=is_reset)
+        return self
+
+    def convert_unit(self, to: dict[str, str], *, sep="->") -> None:
+        self.log.convert_unit(to=to, sep=sep)
+        if self.is_trj_included:
+            self.trj.convert_unit(to=to, sep=sep, ignore_notinclude=True)
+        self.__update_unit()
+
+    def __update_unit(self) -> None:
+        if self.is_trj_included:
+            for trj_unit, val_unit in self.trj.unit.items():
+                assert self.log.unit[trj_unit] == val_unit, "Trj Unit and Log Unit is Different"
+        self.unit = self.log.unit
+
+    def _act_by_mode(self, mode: Literal["auto", "manual"], *, verbose: bool = True):
         if mode == "auto":
             self.gather(verbose=verbose)
             if self.is_trj_included:
-                error = self.check()
-                self.fix(error=error, verbose=verbose)
+                error = doctor.check(log=self.log, trj=self.trj)
+                self.log, self.trj = doctor.fix(log=self.log, trj=self.trj, error=error, verbose=verbose)
 
-    def check(self, *, tol: float = 1e-6) -> str:
-        log_energies, trj_energies = self.log.energy, self.trj.energy
-        log_nframe, trj_nframe = self.log.nframe, self.trj.nframe
-        if log_nframe != trj_nframe:
-            if log_nframe == trj_nframe + 1 and chk_tol(log_energies[1:], trj_energies, tol=tol):
-                return "FirstRestartError"
-            elif log_nframe + 1 == trj_nframe and chk_tol(log_energies, trj_energies[:-1], tol=tol):
-                return "LogIOError"
-            else:
-                return "NoisyRestartError"
-        elif all(log_energies - trj_energies < tol):
-            return "None"
-        else:
-            raise f"Same Frame But Not Equal Energies"
-
-    def fix(
+    def save(
         self,
-        error: Literal["None", "FirstRestartError", "LogIOError", "NoisyRestartError"],
+        fmt: str,
         *,
-        tol: float = 1e-6,
-        verbose: bool = True,
+        savepath: str = "./",
+        query_list: list = None,
+        unit: dict[str, str] = None,
+        element_order: list = None,
     ) -> None:
-        assert error in errors, f"Not Supporting Error, We supports: {errors}"
-        if verbose:
-            print(f"Input error is {error}")
-        if error == "None":
-            return True
-        try:
-            if verbose:
-                print(f" -> Try Fix...")
-            if error == "FirstRestartError":
-                self.log.modify_data(range(1, self.log.nframe))
-            elif error == "LogIOError":
-                self.trj.modify_data(range(self.log.nframe))
-            elif error == "NoisyRestartError":
-                log_energies = self.log.energy
-                trj_energies = self.trj.energy
-                log_chk_frame = 0
-                new_log_frames = np.zeros(len(trj_energies), dtype=int) - 1
-                for itrj, trj_energy in enumerate(trj_energies):
-                    for ilog, log_energy in enumerate(log_energies[log_chk_frame:]):
-                        if abs(log_energy - trj_energy) < tol:
-                            log_chk_frame += ilog
-                            if verbose:
-                                print(f"\tTRJ({itrj}) -> LOG({log_chk_frame})")
-                            new_log_frames[itrj] = log_chk_frame
-                            break
-                assert -1 not in new_log_frames, f"Not matched Error {np.where(new_log_frames == -1)[0]}"
-                self.log.modify_data(new_log_frames)
-            if verbose:
-                print(f" -> Check Energy Tolerance")
-            assert chk_tol(self.log.energy, self.trj.energy, tol=tol), f"Energies are still not equal.."
-            if verbose:
-                print(f" -> Success")
-        except Exception as e:
-            if verbose:
-                print(f" -> Failed", end="")
-            raise e
+        save(
+            fmt=fmt,
+            obj=self,
+            savepath=savepath,
+            query_list=query_list,
+            unit=unit,
+            element_order=element_order,
+        )
