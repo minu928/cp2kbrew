@@ -1,5 +1,5 @@
-from .logfile import LogOpener
-from .trjfile import TrjOpener
+from .log import LogOpener
+from .trj import TrjOpener
 from ._opener import Opener
 
 

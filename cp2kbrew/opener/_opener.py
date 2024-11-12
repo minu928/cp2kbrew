@@ -1,6 +1,6 @@
 from numpy.typing import NDArray
-from cp2kbrew._opener.logfile import LogOpener
-from cp2kbrew._opener.trjfile import TrjOpener
+from cp2kbrew.opener.log import LogOpener
+from cp2kbrew.opener.trj import TrjOpener
 from cp2kbrew.tools import save
 
 

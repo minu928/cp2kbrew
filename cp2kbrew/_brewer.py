@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Literal
-from cp2kbrew._opener import Opener
+from cp2kbrew.opener import Opener
 
 errors = ["None", "FirstRestartError", "LogIOError", "NoisyRestartError"]
 chk_tol = lambda a, b, tol: all(np.abs(a - b) < tol)
