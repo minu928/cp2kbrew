@@ -1,6 +1,5 @@
 import os
 import numpy as np
-from typing import Sequence
 from numpy.typing import NDArray
 from .._saveinterface import SaveInterface
 
