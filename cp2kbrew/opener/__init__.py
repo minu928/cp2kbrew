@@ -1,5 +1,5 @@
-from .log import LogOpener
-from .trj import TrjOpener
+from . import log
+from . import trj
 
 
-__all__ = ["LogOpener", "TrjOpener"]
+__all__ = ["log", "trj"]

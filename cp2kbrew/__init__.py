@@ -1,14 +1,31 @@
-from cp2kbrew.__version__ import __version__
-from cp2kbrew.opener import LogOpener, TrjOpener
-from cp2kbrew._brewer import Brewer
-from cp2kbrew import tools
+__author__ = "Minwoo Kim"
+__email__ = "minu928@snu.ac.kr"
 
 
-__all__ = ["__version__", "__contributors__", "Brewer", "Opener", "LogOpener", "TrjOpener", "tools"]
+try:
+    from cp2kbrew._version import __version__
+except:
+    __version__ = "unkown"
 
-__contributors__ = """
-                            @Copyright By minu928@snu.ac.kr
-    
-        Contributor:
-                    Minwoo Kim,     Seoul National University,  minu928@snu.ac.kr             
-"""
+
+from . import space
+from . import utils
+from . import unit
+from . import typing
+from . import opener
+from . import writer
+from . import handler
+from . import dataclass
+from cp2kbrew._brewer import brewer
+
+__all__ = [
+    "dataclass",
+    "space",
+    "typing",
+    "opener",
+    "unit",
+    "utils",
+    "handler",
+    "writer",
+    "brewer",
+]

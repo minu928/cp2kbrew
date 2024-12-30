@@ -1,7 +1,7 @@
 # cp2kbrew
 
 ```BASH
-version 0.0.6
+version 0.2.0
 ```
 
 ## Install
@@ -13,46 +13,63 @@ cd cp2kbrew
 pip install .
 ```
 
-## Tutorial
 
-## Open the files
+## Example
+### How to open CP2K outlog
 ```python
 import cp2kbrew as cb
 
+logfile = "somewhere/out.log"
+brewer = cb.brewer(logfile)
+print(f"{brewer=}")
+print(f"{brewer.brew(what='force').shape=}")
+print(f"{brewer.brew(what='energy').shape=}")
+print(f"{brewer.brew(what='virial').shape=}")
+print(f"{brewer.brew(what='coord').shape=}")
+print(f"{brewer.brew(what='atom').shape=}")
+print(f"{brewer.brew(what='stress').shape=}")
+print(f"{brewer.brew(what='box').shape=}")
+```
+### How to open CP2K trj and log
+```python
+import cp2kbrew as cb
 
-brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
-print(f"nFRAME: {brewer.nframe}")
-print(f"ENERGY: {brewer.energy}")
-print(f"FORCE : {brewer.force}")
-print(f"STRESS: {brewer.stress}")
-print(f"COORD : {brewer.coord}")
-print(f"CELL  : {brewer.cell}")
+logfile = "somewhere/out.log"
+trjfile = "somewhere/out.xyz"
+brewer = cb.brewer(logfile, trjfile)
+print(f"{brewer=}")
+print(f"{brewer.brew(what='force').shape=}")
+print(f"{brewer.brew(what='energy').shape=}")
+print(f"{brewer.brew(what='virial').shape=}")
+print(f"{brewer.brew(what='coord').shape=}")
+print(f"{brewer.brew(what='atom').shape=}")
+print(f"{brewer.brew(what='stress').shape=}")
+print(f"{brewer.brew(what='box').shape=}")
 ```
 
-## Fix the data
+### How to open CP2K outlog folders
 ```python
 import cp2kbrew as cb
 
-
-brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
-error = brewer.check()
-brewer.fix(error)
+logfiles = ["somewhere_000/out.log","somewhere_001/out.log", "somewhere_002/out.log"]
+brewer = cb.brewer(logfiles)
+print(f"{brewer=}")
+print(f"{brewer.brew(what='force').shape=}")
+print(f"{brewer.brew(what='energy').shape=}")
+print(f"{brewer.brew(what='virial').shape=}")
+print(f"{brewer.brew(what='coord').shape=}")
+print(f"{brewer.brew(what='atom').shape=}")
+print(f"{brewer.brew(what='stress').shape=}")
+print(f"{brewer.brew(what='box').shape=}")
 ```
 
-## ConvertUnit
+### How to write the data
 ```python
 import cp2kbrew as cb
 
-
-brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
-brewer.convert_unit(to={"energy": "hatree->eV"})
-```
-
-## Save
-```python
-import cp2kbrew as cb
-
-
-brewer = cb.Brewer("somewhere/out.log", "somewhere/out.xyz")
-brewer.save(fmt="deepmd@npy", path="./tmp", element_order=["H", "O"])
+logfile = "somewhere/out.log"
+trjfile = "somewhere/out.xyz"
+brewer = cb.brewer(logfile_list)
+brewer.write(fmt="deepmd@npy", path="./tmp", frames=":")
+brewer.write(fmt="trj@extxyz", path="./tmp.extxyz", frames=[1, 2])
 ```

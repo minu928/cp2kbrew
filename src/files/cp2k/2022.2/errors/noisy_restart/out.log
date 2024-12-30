@@ -43,22 +43,11 @@
  DBCSR| Split modifier for TAS multiplication algorithm                  1.0E+00
 
 
-  **** **** ******  **  PROGRAM STARTED AT               2024-05-14 21:45:48.791
- ***** ** ***  *** **   PROGRAM STARTED ON                               anode01
- **    ****   ******    PROGRAM STARTED BY                               minu928
- ***** **    ** ** **   PROGRAM PROCESS ID                               3931451
-  **** **  *******  **  PROGRAM STARTED IN /nas_2/minu928/2_MLFF_devs/0_PythonPa
-                                           ckages/testcp2k/rerun2
-
  CP2K| version string:                                       CP2K version 2022.2
  CP2K| source code revision number:                                  git:a95ec40
  CP2K| cp2kflags: omp libint fftw3 libxc elpa parallel mpi3 scalapack cosma xsmm
  CP2K|             spglib sirius libvori libbqb
  CP2K| is freely available from                            https://www.cp2k.org/
- CP2K| Program compiled at                          Fri Dec 16 08:35:20 KST 2022
- CP2K| Program compiled on                                              nanode04
- CP2K| Program compiled for                                                local
- CP2K| Data directory path                      /home/tools/cp2k-2022.2-AMD/data
  CP2K| Input file name                                                   run.inp
 
  GLOBAL| Force Environment number                                              1

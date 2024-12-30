@@ -17,23 +17,11 @@
  DBCSR| OMP: Max number of threads                                             2
  DBCSR| Split modifier for TAS multiplication algorithm                  1.0E+00
 
-
-  **** **** ******  **  PROGRAM STARTED AT               2024-07-11 16:21:56.903
- ***** ** ***  *** **   PROGRAM STARTED ON                                node12
- **    ****   ******    PROGRAM STARTED BY                               minu928
- ***** **    ** ** **   PROGRAM PROCESS ID                               1603002
-  **** **  *******  **  PROGRAM STARTED IN /nas_2/minu928/2_AqueousEletrolytes/2
-                                           _AIMD/CsCl/npt/330/3
-
  CP2K| version string:                                       CP2K version 2022.2
  CP2K| source code revision number:                                  git:a95ec40
  CP2K| cp2kflags: omp libint fftw3 libxc elpa parallel mpi3 scalapack cosma xsmm
  CP2K|             spglib sirius libvori libbqb
  CP2K| is freely available from                            https://www.cp2k.org/
- CP2K| Program compiled at                          Tue Dec 20 11:55:48 KST 2022
- CP2K| Program compiled on                                                node11
- CP2K| Program compiled for                                                local
- CP2K| Data directory path               /home/tools/cp2k-2022.2-INTEL_XEON/data
  CP2K| Input file name                                                   run.inp
 
  GLOBAL| Force Environment number                                              1
