@@ -12,7 +12,7 @@ del version_dict
 setup(
     name="cp2kbrew",
     version=version,
-    author="minu928",
+    author="Minwoo Kim",
     author_email="minu928@snu.ac.kr",
     url="https://github.com/minu928/cp2kbrew",
     install_requires=[
