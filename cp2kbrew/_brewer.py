@@ -2,8 +2,7 @@ from pathlib import Path
 from typing import Iterable, Union, List
 from dataclasses import replace
 
-from mdbrew import MDState, MDUnit
-from mdbrew._core import MDStateAttr
+from mdbrew import MDState, MDUnit, MDStateAttr
 
 from cp2kbrew import opener
 from cp2kbrew import handler

@@ -1,8 +1,7 @@
 import numpy as np
 from typing import Literal, Dict
 
-from mdbrew import MDState
-from mdbrew._core import MDStateAttr
+from mdbrew import MDState, MDStateAttr
 
 from cp2kbrew.opener import log, trj
 from cp2kbrew.errors import NotEqualFrameError

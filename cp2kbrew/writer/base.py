@@ -3,8 +3,7 @@ from pathlib import Path
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-from mdbrew import MDState
-from mdbrew._core import MDStateAttr
+from mdbrew import MDState, MDStateAttr
 
 from cp2kbrew.handler import stack
 from cp2kbrew.typing import FilePath
