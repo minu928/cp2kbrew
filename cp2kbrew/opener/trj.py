@@ -1,11 +1,13 @@
 from pathlib import Path
-from typing import TextIO, Dict, Generator, List
+from typing import TextIO, Generator
 from dataclasses import dataclass
-from cp2kbrew.dataclass import FrameData, FrameUnit
+
+from mdbrew import MDState, MDUnit
+
 from cp2kbrew.typing import FilePath
 
 
-default_unit = FrameUnit(energy="eV", coord="anstrom")
+default_unit = MDUnit(energy="eV", coord="anstrom")
 
 
 @dataclass
@@ -13,24 +15,24 @@ class TrjOpener:
     def __init_subclass__(cls):
         trjopeners[cls.fmt] = cls
 
-    def generate_framedata(self, trjfile: FilePath) -> Generator[FrameData, None, None]:
+    def generate_mdstates(self, trjfile: FilePath) -> Generator[MDState, None, None]:
         with Path(trjfile).open("r") as f:
             for _ in range(self.skip_head):
                 next(f)
             while True:
                 try:
-                    yield self.extract_framedata(f)
+                    yield self.extract_mdstates(f)
                 except EOFError:
                     break
                 except Exception as e:
                     raise AssertionError(f"Unexpected error in {self.__class__.__name__}: {e}")
 
     @staticmethod
-    def extract_framedata(file: TextIO) -> FrameData:
+    def extract_mdstates(file: TextIO) -> MDState:
         raise NotImplementedError
 
 
-trjopeners: Dict[str, TrjOpener] = {}
+trjopeners: dict[str, TrjOpener] = {}
 
 
 class PDBOpener(TrjOpener):
@@ -38,7 +40,7 @@ class PDBOpener(TrjOpener):
     fmt = "pdb"
 
     @staticmethod
-    def extract_framedata(file: TextIO) -> FrameData:
+    def extract_mdstates(file: TextIO) -> MDState:
         line = file.readline()
         if not line:
             raise EOFError
@@ -47,7 +49,7 @@ class PDBOpener(TrjOpener):
         coord = []
         while (line := file.readline()) and not line.startswith("END"):
             coord.append([float(x) for x in line.split()[3:6]])
-        return FrameData(energy=energy, coord=coord)
+        return MDState(energy=energy, coord=coord)
 
 
 class XYZOpener(TrjOpener):
@@ -55,7 +57,7 @@ class XYZOpener(TrjOpener):
     fmt = "xyz"
 
     @staticmethod
-    def extract_framedata(file: TextIO) -> FrameData:
+    def extract_mdstates(file: TextIO) -> MDState:
         line = file.readline()
         if not line:
             raise EOFError
@@ -64,14 +66,14 @@ class XYZOpener(TrjOpener):
         for _ in range(int(line)):
             line = file.readline().split()
             coord.append([float(x) for x in line[1:4]])
-        return FrameData(energy=energy, coord=coord)
+        return MDState(energy=energy, coord=coord)
 
 
-def generate_framedata(trjfile: FilePath, *, fmt: str = None) -> Generator[FrameData, None, None]:
+def generate_mdstates(trjfile: FilePath, *, fmt: str = None) -> Generator[MDState, None, None]:
     if fmt is None:
-        fmt = Path(trjfile).suffix[1:]  # 더 안전한 확장자 추출
-    return trjopeners[fmt]().generate_framedata(trjfile)
+        fmt = Path(trjfile).suffix[1:]
+    return trjopeners[fmt]().generate_mdstates(trjfile)
 
 
-def collect_framedata(trjfile: FilePath) -> List[FrameData]:
-    return list(generate_framedata(trjfile))
+def collect_mdstates(trjfile: FilePath) -> list[MDState]:
+    return list(generate_mdstates(trjfile))

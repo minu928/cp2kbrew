@@ -18,7 +18,7 @@ setup(
     install_requires=[
         "numpy>=1.21.0,<2.0.0",
         "tqdm>=4.0.0",
-        "unitbrew>=0.0.1",
+        "mdbrew>=0.0.2",
     ],
     description="CP2K Dealing Programs",
     packages=find_packages(),

@@ -15,11 +15,9 @@ from . import typing
 from . import opener
 from . import writer
 from . import handler
-from . import dataclass
-from cp2kbrew._brewer import brewer
+from ._brewer import brewer
 
 __all__ = [
-    "dataclass",
     "space",
     "typing",
     "opener",

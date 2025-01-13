@@ -1,11 +1,13 @@
 import os
-import numpy as np
-from typing import List, Dict
 from pathlib import Path
 from abc import ABCMeta, abstractmethod
+
+import numpy as np
+from mdbrew import MDState
+from mdbrew._core import MDStateAttr
+
 from cp2kbrew.handler import stack
 from cp2kbrew.typing import FilePath
-from cp2kbrew.dataclass import FrameDataList, FrameDataAtrr
 
 
 __all__ = ["writers", "Writer", "DeePMDNPYWriter", "TrjEXTXYZWriter"]
@@ -30,11 +32,11 @@ class Writer(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def write(cls, path: FilePath, framedatalist: FrameDataList, *, querylist: List[FrameDataAtrr] = None, **kwargs):
+    def write(cls, path: FilePath, mdstates: list[MDState], *, querylist: list[MDStateAttr] = None, **kwargs):
         pass
 
 
-registry: Dict[str, Writer] = {}
+registry: dict[str, Writer] = {}
 
 
 class DeePMDNPYWriter(Writer):
@@ -42,14 +44,14 @@ class DeePMDNPYWriter(Writer):
     querylist = ("force", "energy", "virial", "atom", "coord", "box")
 
     @classmethod
-    def write(cls, path: FilePath, framedatalist: FrameDataList, *, querylist: List[FrameDataAtrr] = None, **kwargs):
+    def write(cls, path: FilePath, mdstates: list[MDState], *, querylist: list[MDStateAttr] = None, **kwargs):
         querylist = querylist or cls.querylist
         exist_ok = kwargs.get("exist_ok", False)
         os.makedirs(Path(path), exist_ok=exist_ok)
         save_path = os.path.join(path, "set.000")
         os.makedirs(save_path, exist_ok=exist_ok)
         for queryname in querylist:
-            querydata = stack(framedatalist, what=queryname)
+            querydata = stack(mdstates, what=queryname)
             if queryname == "atom":
                 atom_order = kwargs.get("atom_order", None)
                 atom_order = np.unique(querydata) if atom_order is None else atom_order
@@ -71,7 +73,7 @@ class TrjEXTXYZWriter(Writer):
     querylist = ("force", "energy", "stress", "atom", "coord", "box")
 
     @classmethod
-    def write(cls, path: FilePath, framedatalist: FrameDataList, *, querylist: List[FrameDataAtrr] = None, **kwargs):
+    def write(cls, path: FilePath, mdstates: list[MDState], *, querylist: list[MDStateAttr] = None, **kwargs):
         querylist = querylist or cls.querylist
         fmt = kwargs.get("fmt", "%.8s")
         config = {
@@ -85,7 +87,7 @@ class TrjEXTXYZWriter(Writer):
             config["fmt"] += f" {fmt} {fmt} {fmt}"
 
         with Path(path).open(mode=kwargs.get("mode", "w")) as f:
-            for framedata in framedatalist:
+            for framedata in mdstates:
                 natoms = len(framedata.atom)
                 f.writelines(f"\t{natoms}\n")
 

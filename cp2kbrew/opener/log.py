@@ -1,14 +1,16 @@
 import re
 from pathlib import Path
-from typing import Generator, List
-from unitbrew.style import FrameUnit
-from cp2kbrew.dataclass import FrameData
+from typing import Generator
+
+from mdbrew import MDState, MDUnit
+
 from cp2kbrew.typing import FilePath
+
 
 END_PATTERNS = ["\s+Extrapolation method:\s+ASPC\s+", "\s+\-\s+DBCSR STATISTICS\s+\-\s+"]
 
 
-def generate_framedata(logfile: FilePath) -> Generator[FrameData, None, None]:
+def generate_mdstates(logfile: FilePath) -> Generator[MDState, None, None]:
     data = {
         "energy": None,
         "coord": [],
@@ -24,7 +26,7 @@ def generate_framedata(logfile: FilePath) -> Generator[FrameData, None, None]:
         while line := f.readline():
             for end in END_PATTERNS:
                 if re.match(end, line):
-                    yield FrameData(**data)
+                    yield MDState(**data)
                     data["energy"] = None
                     data["box"] = []
                     data["coord"] = []
@@ -37,7 +39,8 @@ def generate_framedata(logfile: FilePath) -> Generator[FrameData, None, None]:
                 data["box"].append(splited_line[4:7])
                 continue
             if line.startswith(" MD| Cell lengths [ang"):
-                data["box"] = line.split()[-3:]
+                box = line.split()[-3:]
+                data["box"] = [[box[0], 0.0, 0.0], [0.0, box[1], 0.0], [0.0, 0.0, box[2]]]
                 continue
 
             # LINE: energy
@@ -87,11 +90,11 @@ def generate_framedata(logfile: FilePath) -> Generator[FrameData, None, None]:
                 continue
 
 
-def collect_framedata(logfile: FilePath) -> List[FrameData]:
-    return list(generate_framedata(logfile))
+def collect_mdstates(logfile: FilePath) -> list[MDState]:
+    return list(generate_mdstates(logfile))
 
 
-def extract_frameunit(logfile: FilePath) -> FrameUnit:
+def extract_frameunit(logfile: FilePath) -> MDUnit:
     unit = {
         "energy": None,
         "coord": None,
@@ -102,7 +105,7 @@ def extract_frameunit(logfile: FilePath) -> FrameUnit:
     with Path(logfile).open("r") as f:
         while line := f.readline():
             if all([u != None for u in unit.values()]):
-                return FrameUnit(**unit)
+                return MDUnit(**unit)
             # LINE: box
             if line.startswith(" CELL| Vector"):
                 unit["box"] = line.split()[3][1:-2]
