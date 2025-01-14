@@ -120,7 +120,7 @@ class ClusterBrewer(Brewer):
 
     def _init_mdstates(self) -> list[MDState]:
         return [
-            self._collect_and_merge_framedata(logfile, trjfile)[0]
+            self._collect_and_merge_mdstates(logfile, trjfile)[0]
             for logfile, trjfile in zip(self.logfile_list, self.trjfile_list or [None] * len(self.logfile_list))
         ]
 

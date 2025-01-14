@@ -2,7 +2,7 @@ from typing import Dict
 from mdbrew import unit, MDState, MDUnit, MDStateAttr
 
 
-metal = MDUnit(coord="angstrom", box="angstrom", force="hatree/bohr", energy="eV", stress="eV/angstrom^3", virial="eV")
+metal = MDUnit(coord="angstrom", box="angstrom", force="eV/angstrom", energy="eV", stress="eV/angstrom^3", virial="eV")
 
 
 def create_multiplierdict(
