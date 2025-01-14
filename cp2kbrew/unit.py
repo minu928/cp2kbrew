@@ -1,5 +1,6 @@
 from typing import Dict
-from mdbrew import unit, MDState, MDUnit, MDStateAttr
+from mdbrew import unit
+from mdbrew.type import MDState, MDUnit, MDStateAttr
 
 
 metal = MDUnit(coord="angstrom", box="angstrom", force="eV/angstrom", energy="eV", stress="eV/angstrom^3", virial="eV")
