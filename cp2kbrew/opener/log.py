@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Generator
 
-from mdbrew import MDState, MDUnit
+from mdbrew.type import MDState, MDUnit
 
 from cp2kbrew.typing import FilePath
 

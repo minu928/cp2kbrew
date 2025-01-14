@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import TextIO, Generator
 from dataclasses import dataclass
 
-from mdbrew import MDState, MDUnit
+from mdbrew.type import MDState, MDUnit
 
 from cp2kbrew.typing import FilePath
 

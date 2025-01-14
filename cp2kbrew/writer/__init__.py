@@ -1,4 +1,4 @@
-from mdbrew import MDState
+from mdbrew.type import MDState
 
 from cp2kbrew.writer.base import registry
 
