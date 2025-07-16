@@ -119,7 +119,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
 
             # LINE: coord and atom
             if "ATOMIC COORDINATES" in line:
-                unit["coord"] = line.split()[-1]
+                unit["coord"] = line.split()[-1].lower()
                 continue
 
             # LINE: force
