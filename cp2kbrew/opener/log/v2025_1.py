@@ -114,7 +114,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
             # LINE: energy
             if line.startswith(" ENERGY| Total"):
                 this_unit = line.split()[-2][1:-2].lower()
-                unit["energy"] = "hatree" if "hartre" in this_unit else this_unit
+                unit["energy"] = this_unit
                 continue
 
             # LINE: coord and atom
@@ -125,7 +125,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
             # LINE: force
             if line.startswith(" FORCES| Atomic forces"):
                 this_unit = line.split()[-1][1:-1].lower()
-                unit["force"] = "hatree/bohr" if this_unit == "hartree/bohr" else this_unit
+                unit["force"] = this_unit
 
             # LINE: stress
             if line.startswith(" STRESS| Analytical"):
