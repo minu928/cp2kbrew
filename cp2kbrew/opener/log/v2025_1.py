@@ -123,7 +123,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
                 continue
 
             # LINE: force
-            if line.startswith("FORCES| Atomic forces"):
+            if line.startswith(" FORCES| Atomic forces"):
                 this_unit = line.split()[-1][1:-1]
                 unit["force"] = "hatree/bohr" if this_unit == "a.u." else this_unit
 
