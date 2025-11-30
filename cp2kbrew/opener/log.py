@@ -28,7 +28,7 @@ def generate_mdstates(logfile: FilePath) -> Generator[MDState, None, None]:
                 if re.match(end, line):
                     yield MDState(**data)
                     data["energy"] = None
-                    data["box"] = []
+                    # data["box"] = []
                     data["coord"] = []
                     data["force"] = []
                     data["stress"] = []
@@ -114,7 +114,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
             # LINE: energy
             if line.startswith(" ENERGY| Total"):
                 this_unit = line.split()[-2][1:-2]
-                unit["energy"] = "hatree" if this_unit == "a.u." else this_unit
+                unit["energy"] = "hartree" if this_unit == "a.u." else this_unit
                 continue
 
             # LINE: coord and atom
@@ -125,7 +125,7 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
             # LINE: force
             if line.startswith(" ATOMIC FORCES in"):
                 this_unit = line.split()[-1][1:-1]
-                unit["force"] = "hatree/bohr" if this_unit == "a.u." else this_unit
+                unit["force"] = "hartree/bohr" if this_unit == "a.u." else this_unit
 
             # LINE: stress
             if line.startswith(" STRESS| Analytical"):

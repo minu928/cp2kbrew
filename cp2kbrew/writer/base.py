@@ -74,21 +74,23 @@ class TrjEXTXYZWriter(Writer):
     @classmethod
     def write(cls, path: FilePath, mdstates: list[MDState], *, querylist: list[MDStateAttr] = None, **kwargs):
         querylist = querylist or cls.querylist
-        fmt = kwargs.get("fmt", "%.8s")
+        fmt_str = kwargs.get("fmt", "%.8f")
+
         config = {
             "line": f"Properties=species:S:1:pos:R:3",
             "data": ["atom", "coord"],
-            "fmt": f"{fmt} {fmt} {fmt} {fmt}",
         }
+
+        fmt_list = ["%.8s"] + [fmt_str] * 3  # atom + coord
         if "force" in querylist:
             config["line"] += ":forces:R:3"
             config["data"].append("force")
-            config["fmt"] += f" {fmt} {fmt} {fmt}"
+            fmt_list += [fmt_str] * 3
 
         with Path(path).open(mode=kwargs.get("mode", "w")) as f:
             for framedata in mdstates:
                 natoms = len(framedata.atom)
-                f.writelines(f"\t{natoms}\n")
+                f.write(f"{natoms}\n")
 
                 # * Info Line
                 infoline = ""
@@ -100,8 +102,16 @@ class TrjEXTXYZWriter(Writer):
                     infoline += f'virial="{" ".join(framedata.virial.flatten().astype(str))}" '
                 if "stress" in querylist:
                     infoline += f'stress="{" ".join(framedata.stress.flatten().astype(str))}" '
-                infoline += config["line"] + ' pbc="T T T" \n'
-                f.writelines(infoline)
+                infoline += config["line"] + ' pbc="T T T"\n'
+                f.write(infoline)
 
-                property_data = np.concatenate([getattr(framedata, what) for what in config["data"]], axis=-1)
-                np.savetxt(f, property_data, fmt=config["fmt"])
+                property_data = []
+                for i in range(natoms):
+                    row = [framedata.atom[i]]
+                    row.extend(framedata.coord[i])
+                    if "force" in querylist:
+                        row.extend(framedata.force[i])
+                    property_data.append(row)
+
+                property_data = np.array(property_data, dtype=object)
+                np.savetxt(f, property_data, fmt=" ".join(fmt_list))
