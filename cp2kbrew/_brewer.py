@@ -18,10 +18,11 @@ __all__ = ["brew", "Brewer", "ClusterBrewer"]
 
 
 class Brewer:
-    def __init__(self, logfile: FilePath, trjfile: FilePath = None, *, unit: MDUnit = metal):
+    def __init__(self, logfile: FilePath, trjfile: FilePath = None, *, unit: MDUnit = metal, version: str = "v2022.2"):
         self.logfile = Path(logfile)
         self.trjfile = Path(trjfile) if trjfile else None
-        self._unit = opener.log.extract_frameunit(logfile=self.logfile)
+        self.log = opener.log.get_logger(version=version)
+        self._unit = self.log.extract_frameunit(logfile=self.logfile)
         self._mdstates = self._collect_and_merge_mdstates(logfile=self.logfile, trjfile=self.trjfile)
         self.update_unit(unit=unit)
         self.update_virial()
@@ -45,9 +46,8 @@ class Brewer:
     def unit(self):
         return self._unit
 
-    @staticmethod
-    def _collect_and_merge_mdstates(logfile: FilePath, trjfile: FilePath) -> list[MDState]:
-        mdstates = opener.log.collect_mdstates(logfile=logfile)
+    def _collect_and_merge_mdstates(self, logfile: FilePath, trjfile: FilePath) -> list[MDState]:
+        mdstates = self.log.collect_mdstates(logfile=logfile)
         if trjfile:
             log_mdstates = mdstates
             trj_mdstates = opener.trj.collect_mdstates(trjfile=trjfile)
@@ -136,7 +136,8 @@ def brewer(
     trjfiles: Union[FilePath, List[FilePath]] = None,
     *,
     unit: MDUnit = metal,
+    version: str = "v2022.1",
 ):
     if isinstance(logfiles, List):
         return ClusterBrewer(logfile_list=logfiles, trjfile_list=trjfiles, unit=unit)
-    return Brewer(logfile=logfiles, trjfile=trjfiles, unit=unit)
+    return Brewer(logfile=logfiles, trjfile=trjfiles, unit=unit, version=version)
