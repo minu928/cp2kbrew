@@ -113,7 +113,8 @@ def extract_frameunit(logfile: FilePath) -> MDUnit:
 
             # LINE: energy
             if line.startswith(" ENERGY| Total"):
-                this_unit = line.split()[-2][1:-2].lower()
+                # reads both "[hartree]:" and "[hartree]" (CP2K 2026.2 prints no colon)
+                this_unit = line.split()[-2].strip("[]:").lower()
                 unit["energy"] = this_unit
                 continue
 

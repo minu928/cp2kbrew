@@ -136,7 +136,7 @@ def brewer(
     trjfiles: Union[FilePath, List[FilePath]] = None,
     *,
     unit: MDUnit = metal,
-    version: str = "v2022.1",
+    version: str = "v2022.2",
 ):
     if isinstance(logfiles, List):
         return ClusterBrewer(logfile_list=logfiles, trjfile_list=trjfiles, unit=unit)
